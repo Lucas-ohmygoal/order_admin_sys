@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: order-admin-sys
+    runtime: java
+    buildCommand: mvn clean package
+    startCommand: java -jar target/order-admin-sys-1.0.0.jar
+    envVars:
+      - key: PORT
+        generateValue: true
+      - key: DATABASE_URL
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
