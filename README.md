@@ -51,8 +51,8 @@ An order management system built with Spring Boot, MyBatis, and Thymeleaf.
 6. **Create Web Service**:
    - Choose "Web Service"
    - Select your repository
-   - Build Command: `mvn clean package`
-   - Start Command: `java -jar target/order-admin-sys-1.0.0.jar`
+   - Runtime: Docker
+   - Dockerfile Path: Dockerfile (optional, Render auto-detects)
 
 7. **Environment Variables**:
    - `PORT`: Automatically set by Render
