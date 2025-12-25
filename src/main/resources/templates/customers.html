@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>订单管理系统 - 客户</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f8fafc;
+            color: #334155;
+        }
+
+        .navbar {
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1rem 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .navbar-nav {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-link {
+            color: #64748b;
+            text-decoration: none;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover {
+            background: #f1f5f9;
+            color: #334155;
+        }
+
+        .logout-btn {
+            background: #dc2626;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: #b91c1c;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-title {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: #64748b;
+        }
+
+        .toolbar {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 0.5rem;
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .search-btn, .add-btn, .delete-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .search-btn {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .search-btn:hover {
+            background: #2563eb;
+        }
+
+        .add-btn {
+            background: #10b981;
+            color: white;
+        }
+
+        .add-btn:hover {
+            background: #059669;
+        }
+
+        .delete-btn {
+            background: #dc2626;
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background: #b91c1c;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            background: #f8fafc;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #374151;
+            border-bottom: 2px solid #e5e7eb;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .data-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #f1f5f9;
+            color: #374151;
+        }
+
+        .data-table tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        .checkbox-cell {
+            width: 40px;
+        }
+
+        .checkbox-input {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .id-cell {
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 0.875rem;
+        }
+
+        .name-cell {
+            font-weight: 500;
+        }
+
+        .email-cell {
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+
+        .phone-cell {
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.875rem;
+        }
+
+        .address-cell {
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .actions-cell {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            padding: 0.375rem 0.75rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.75rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .edit-btn {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .edit-btn:hover {
+            background: #2563eb;
+        }
+
+        .delete-btn-link {
+            background: #dc2626;
+            color: white;
+        }
+
+        .delete-btn-link:hover {
+            background: #b91c1c;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #64748b;
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .empty-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-form {
+                max-width: none;
+            }
+
+            .table-container {
+                overflow-x: auto;
+            }
+
+            .data-table {
+                min-width: 600px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="navbar-brand">订单管理系统</div>
+            <div class="navbar-nav">
+                <a th:href="@{/main}" class="nav-link">控制面板</a>
+                <a th:href="@{/products}" class="nav-link">产品</a>
+                <a th:href="@{/orders}" class="nav-link">订单</a>
+                <a th:href="@{/logout}" class="logout-btn">退出登录</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">客户管理</h1>
+            <p class="page-subtitle">管理您的客户数据库和联系信息</p>
+        </div>
+
+        <div class="toolbar">
+            <form th:action="@{/customers}" method="get" class="search-form">
+                <input type="text" name="keyword" placeholder="按姓名、邮箱、电话搜索..." class="search-input"/>
+                <button type="submit" class="search-btn">🔍 搜索</button>
+            </form>
+
+            <div style="display: flex; gap: 0.5rem;">
+                <a th:href="@{/customers/add}" class="add-btn">➕ 添加客户</a>
+                <button type="button" class="delete-btn" onclick="deleteSelected()">🗑️ 删除选中项</button>
+            </div>
+        </div>
+
+        <form th:action="@{/customers/deleteBatch}" method="post" id="batchForm">
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th class="checkbox-cell">
+                                <input type="checkbox" id="selectAll" class="checkbox-input"/>
+                            </th>
+                            <th>ID</th>
+                            <th>姓名</th>
+                            <th>邮箱</th>
+                            <th>电话</th>
+                            <th>地址</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="customer : ${customers}" th:if="${!customers.empty}">
+                            <td class="checkbox-cell">
+                                <input type="checkbox" name="ids" th:value="${customer.id}" class="checkbox-input"/>
+                            </td>
+                            <td class="id-cell" th:text="${customer.id}"></td>
+                            <td class="name-cell" th:text="${customer.name}"></td>
+                            <td class="email-cell" th:text="${customer.email}"></td>
+                            <td class="phone-cell" th:text="${customer.phone}"></td>
+                            <td class="address-cell" th:text="${customer.address}" title="${customer.address}"></td>
+                            <td class="actions-cell">
+                                <a th:href="@{/customers/edit/{id}(id=${customer.id})}" class="action-btn edit-btn">编辑</a>
+                                <a th:href="@{/customers/delete/{id}(id=${customer.id})}"
+                                   onclick="return confirm('确定要删除这个客户吗？')"
+                                   class="action-btn delete-btn-link">删除</a>
+                            </td>
+                        </tr>
+                        <tr th:if="${customers.empty}">
+                            <td colspan="7" class="empty-state">
+                                <div class="empty-icon">👥</div>
+                                <div class="empty-title">未找到客户</div>
+                                <p>开始向系统添加您的第一个客户。</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('selectAll').onclick = function() {
+            var checkboxes = document.querySelectorAll('input[name="ids"]');
+            for (var checkbox of checkboxes) {
+                checkbox.checked = this.checked;
+            }
+        };
+
+        function deleteSelected() {
+            var checkedBoxes = document.querySelectorAll('input[name="ids"]:checked');
+            if (checkedBoxes.length === 0) {
+                alert('请选择要删除的客户。');
+                return;
+            }
+            if (confirm('确定要删除选中的客户吗？')) {
+                document.getElementById('batchForm').submit();
+            }
+        }
+    </script>
+</body>
+</html>
