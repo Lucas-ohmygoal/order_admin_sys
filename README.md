@@ -11,47 +11,60 @@ An order management system built with Spring Boot, MyBatis, and Thymeleaf.
 
 ## Local Development
 
-1. Set up MySQL database:
+1. Set up PostgreSQL database:
    ```sql
    CREATE DATABASE order_admin_db;
    ```
 
-2. Update `src/main/resources/application.properties` with your database credentials.
+2. Run the PostgreSQL SQL script:
+   ```bash
+   psql -d order_admin_db -f order_admin_db_postgres.sql
+   ```
 
-3. Run the application:
+3. Update `src/main/resources/application.properties` with your database credentials.
+
+4. Run the application:
    ```bash
    mvn spring-boot:run
    ```
 
-4. Access at http://localhost:8080
+5. Access at http://localhost:8080
 
-## Deployment on Render
+## Deployment on Render with Supabase
 
-1. **Create Render Account**: Sign up at https://render.com
+1. **Create Supabase Account**: Sign up at https://supabase.com
 
-2. **Connect Repository**: Link your GitHub/GitLab repository
+2. **Create Database**:
+   - Go to your Supabase dashboard
+   - Navigate to SQL Editor
+   - Copy and paste the contents of `order_admin_db_postgres.sql`
+   - Run the SQL to create tables and insert sample data
 
-3. **Create Web Service**:
+3. **Get Connection Details**:
+   - In Supabase dashboard, go to Settings > Database
+   - Copy the connection string (it will look like: `postgresql://postgres:[password]@[host]:5432/postgres`)
+
+4. **Create Render Account**: Sign up at https://render.com
+
+5. **Connect Repository**: Link your GitHub/GitLab repository
+
+6. **Create Web Service**:
    - Choose "Web Service"
    - Select your repository
-   - Build Command: `./mvnw clean package` (or `mvn clean package` if Maven is installed)
-   - Start Command: `java -jar target/*.jar`
+   - Build Command: `mvn clean package`
+   - Start Command: `java -jar target/order-admin-sys-1.0.0.jar`
 
-4. **Environment Variables**:
+7. **Environment Variables**:
    - `PORT`: Automatically set by Render
-   - `DATABASE_URL`: Your database connection string
-   - `DB_USERNAME`: Database username
-   - `DB_PASSWORD`: Database password
-
-5. **Database Setup**:
-   - Create a MySQL database on Render or use an external MySQL provider
-   - Run the SQL script `order_admin_db.sql` to initialize tables
+   - `DATABASE_URL`: Your Supabase PostgreSQL connection string
+   - `DB_USERNAME`: From Supabase connection details
+   - `DB_PASSWORD`: From Supabase connection details
 
 ## Tech Stack
 
 - Java 17
 - Spring Boot 2.6.15
 - MyBatis
-- MySQL
+- PostgreSQL
 - Thymeleaf
 - Maven
