@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${order.id != null} ? 'Edit Order' : 'Add Order'"></title>
+</head>
+<body>
+    <h2 th:text="${order.id != null} ? 'Edit Order' : 'Add Order'"></h2>
+    <p>Hello, <span th:text="${user.username}"></span> | <a th:href="@{/orders}">Back to Orders</a></p>
+
+    <form th:action="${order.id != null} ? @{/orders/edit/{id}(id=${order.id})} : @{/orders/add}" method="post" th:object="${order}">
+        <div>
+            <label>Customer:</label>
+            <select th:field="*{customerId}" required>
+                <option value="">Select Customer</option>
+                <option th:each="customer : ${customers}" th:value="${customer.id}" th:text="${customer.name}"></option>
+            </select>
+        </div>
+        <div>
+            <label>Product:</label>
+            <select th:field="*{productId}" required>
+                <option value="">Select Product</option>
+                <option th:each="product : ${products}" th:value="${product.id}" th:text="${product.name}"></option>
+            </select>
+        </div>
+        <div>
+            <label>Quantity:</label>
+            <input type="number" th:field="*{quantity}" required/>
+        </div>
+        <div>
+            <label>Status:</label>
+            <select th:field="*{status}" required>
+                <option value="pending">Pending</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="shipped">Shipped</option>
+                <option value="delivered">Delivered</option>
+                <option value="cancelled">Cancelled</option>
+            </select>
+        </div>
+        <button type="submit" th:text="${order.id != null} ? 'Update' : 'Add'"></button>
+    </form>
+</body>
+</html>
